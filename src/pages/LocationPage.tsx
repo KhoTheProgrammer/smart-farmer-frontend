@@ -6,10 +6,11 @@ import { useNavigate } from "react-router-dom";
 
 function LocationPage() {
   const navigate = useNavigate();
-  const [locationSelected, setLocationSelected] = useState(false);
+  const [locationSelected] = useState(false);
 
   // TODO: Person 1 - Import and use LocationSelector component here
   // TODO: Person 1 - Handle location selection
+  // TODO: Person 1 - Use setLocationSelected when location is selected
 
   const handleContinue = () => {
     if (locationSelected) {
@@ -37,6 +38,7 @@ function LocationPage() {
 
       <div className="mt-6 flex justify-end">
         <button
+          type="button"
           onClick={handleContinue}
           disabled={!locationSelected}
           className="btn-primary"
