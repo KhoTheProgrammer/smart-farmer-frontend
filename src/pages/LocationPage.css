@@ -1,0 +1,44 @@
+.location-page {
+  min-height: 80vh;
+  padding: 40px 0;
+}
+
+.location-page .container {
+  max-width: 600px;
+}
+
+.location-page h1 {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.instructions {
+  text-align: center;
+  color: #666;
+  margin-bottom: 40px;
+}
+
+.location-selector-placeholder {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.location-selector-placeholder p {
+  color: #999;
+  margin-bottom: 8px;
+}
+
+.continue-btn {
+  width: 100%;
+  padding: 16px;
+  font-size: 18px;
+}
+
+.continue-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
