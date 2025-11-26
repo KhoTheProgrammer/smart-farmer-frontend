@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+/* Custom color theme for Smart Farmer */
+:root {
+  --color-primary: #2d5016;
+  --color-primary-light: #4a7c2c;
+  --color-primary-dark: #1a3009;
+}
+
+/* Base styles */
+body {
+  @apply bg-gray-50 text-gray-900;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom utility classes */
+.btn-primary {
+  @apply bg-[--color-primary] hover:bg-[--color-primary-light] text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed;
+}
+
+.card {
+  @apply bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow duration-200;
+}
+
+.input-field {
+  @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[--color-primary] focus:border-transparent;
+}
+
+.error-message {
+  @apply text-red-600 bg-red-50 p-4 rounded-lg border-l-4 border-red-600;
+}
+
+.success-message {
+  @apply text-green-600 bg-green-50 p-4 rounded-lg border-l-4 border-green-600;
+}
+
+.warning-message {
+  @apply text-yellow-600 bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-600;
+}
