@@ -34,7 +34,10 @@ function HomePage() {
           </p>
         </div>
 
-        <div className="card text-center">
+        <div
+          className="card text-center cursor-pointer hover:shadow-lg hover:scale-105 transition-all duration-200"
+          onClick={() => navigate("/calendar")}
+        >
           <div className="text-4xl mb-4">📅</div>
           <h3 className="text-xl font-semibold text-[--color-primary] mb-2">
             Planting Calendar
@@ -44,7 +47,10 @@ function HomePage() {
           </p>
         </div>
 
-        <div className="card text-center">
+        <div
+          className="card text-center cursor-pointer hover:shadow-lg hover:scale-105 transition-all duration-200"
+          onClick={() => navigate("/crops")}
+        >
           <div className="text-4xl mb-4">🌱</div>
           <h3 className="text-xl font-semibold text-[--color-primary] mb-2">
             Crop Recommendations
