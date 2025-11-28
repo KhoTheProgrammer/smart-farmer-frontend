@@ -103,6 +103,13 @@ export const getPlantingCalendar = async (
     }
 
     const response = await api.get("/advisory/planting-calendar/", { params });
+    if (response.data.length === 0) {
+      throw new Error("No planting calendar data available");
+    }
+
+    // Multiply the confidence_level by 100 to make it readable
+    const newConfidenceLevel = response.data.confidence_level * 100;
+    response.data.confidence_level = newConfidenceLevel
     return response.data;
   } catch (error) {
     console.error("Failed to fetch planting calendar:", error);
