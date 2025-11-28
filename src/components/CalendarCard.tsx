@@ -80,7 +80,7 @@ function CalendarCard({ calendar }: CalendarCardProps) {
         <h3 className="section-title">📊 Confidence Level</h3>
         <div className="confidence-display">
           <div className="confidence-percentage">
-            {calendar.confidence_level}%
+            {calendar.confidence_level.toFixed(3)}%
           </div>
           <div className="confidence-bar-container">
             <div
