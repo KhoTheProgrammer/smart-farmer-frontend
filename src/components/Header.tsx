@@ -1,9 +1,12 @@
 // Header component - navigation bar shown on all pages
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useLanguage } from "../contexts/LanguageContext";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 function Header() {
   const location = useLocation();
+  const { t } = useLanguage();
   const [selectedLocation, setSelectedLocation] = useState<string>("");
 
   useEffect(() => {
@@ -36,7 +39,7 @@ function Header() {
           </div>
 
           {/* Navigation */}
-          <nav className="flex flex-wrap gap-2 md:gap-4">
+          <nav className="flex flex-wrap gap-2 md:gap-4 items-center">
             <Link
               to="/"
               className={`px-4 py-2 rounded-lg transition-colors ${
@@ -46,7 +49,7 @@ function Header() {
                 isActive("/") ? { color: "var(--color-primary)" } : undefined
               }
             >
-              Home
+              {t("nav.home")}
             </Link>
             <Link
               to="/location"
@@ -61,7 +64,7 @@ function Header() {
                   : undefined
               }
             >
-              Location
+              {t("nav.location")}
             </Link>
             <Link
               to="/calendar"
@@ -76,7 +79,7 @@ function Header() {
                   : undefined
               }
             >
-              Calendar
+              {t("nav.calendar")}
             </Link>
             <Link
               to="/crops"
@@ -91,8 +94,9 @@ function Header() {
                   : undefined
               }
             >
-              Crops
+              {t("nav.crops")}
             </Link>
+            <LanguageSwitcher />
           </nav>
 
           {/* Selected Location Display */}
