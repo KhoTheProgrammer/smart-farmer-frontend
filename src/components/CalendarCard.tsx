@@ -2,6 +2,7 @@
 // Task 2.2: Person 2 - Calendar Card Component
 
 import type { PlantingCalendar } from "../types";
+import { useLanguage } from "../contexts/LanguageContext";
 import "../styles/CalendarPage.css";
 
 interface CalendarCardProps {
@@ -9,10 +10,13 @@ interface CalendarCardProps {
 }
 
 function CalendarCard({ calendar }: CalendarCardProps) {
+  const { t, language } = useLanguage();
+
   // Format dates nicely (e.g., "November 15")
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
+    const locale = language === "ny" ? "en-US" : "en-US"; // Keep English date format for now
+    return date.toLocaleDateString(locale, {
       month: "long",
       day: "numeric",
     });
@@ -27,9 +31,9 @@ function CalendarCard({ calendar }: CalendarCardProps) {
 
   // Get confidence label
   const getConfidenceLabel = (confidence: number) => {
-    if (confidence >= 80) return "High Confidence";
-    if (confidence >= 60) return "Medium Confidence";
-    return "Low Confidence";
+    if (confidence >= 80) return t("calendarCard.highConfidence");
+    if (confidence >= 60) return t("calendarCard.mediumConfidence");
+    return t("calendarCard.lowConfidence");
   };
 
   // Calculate days in planting window
@@ -47,37 +51,47 @@ function CalendarCard({ calendar }: CalendarCardProps) {
       <div className="calendar-card-header">
         <span className="calendar-icon">📅</span>
         <h2 className="calendar-title">
-          {calendar.crop_name || "General"} Planting Calendar
+          {language === "ny" && calendar.crop_name_chichewa
+            ? calendar.crop_name_chichewa
+            : calendar.crop_name || t("calendarCard.general")}{" "}
+          {t("calendarCard.plantingCalendar")}
         </h2>
       </div>
 
-      {/* Crop name in Chichewa if available */}
-      {calendar.crop_name_chichewa && (
+      {/* Crop name in alternate language if available */}
+      {language === "ny" && calendar.crop_name && (
+        <p className="calendar-subtitle">{calendar.crop_name}</p>
+      )}
+      {language === "en" && calendar.crop_name_chichewa && (
         <p className="calendar-subtitle">{calendar.crop_name_chichewa}</p>
       )}
 
       {/* Planting Window Section */}
       <div className="planting-window-section">
-        <h3 className="section-title">🌱 Planting Window</h3>
+        <h3 className="section-title">🌱 {t("calendarCard.plantingWindow")}</h3>
         <div className="date-range">
           <div className="date-item">
-            <span className="date-label">Start Date</span>
-            <span className="date-value">{formatDate(calendar.start_date)}</span>
+            <span className="date-label">{t("calendarCard.startDate")}</span>
+            <span className="date-value">
+              {formatDate(calendar.start_date)}
+            </span>
           </div>
           <div className="date-separator">→</div>
           <div className="date-item">
-            <span className="date-label">End Date</span>
+            <span className="date-label">{t("calendarCard.endDate")}</span>
             <span className="date-value">{formatDate(calendar.end_date)}</span>
           </div>
         </div>
         <p className="window-duration">
-          {calculateDaysInWindow()} days planting window
+          {calculateDaysInWindow()} {t("calendarCard.daysWindow")}
         </p>
       </div>
 
       {/* Confidence Level Section */}
       <div className="confidence-section">
-        <h3 className="section-title">📊 Confidence Level</h3>
+        <h3 className="section-title">
+          📊 {t("calendarCard.confidenceLevel")}
+        </h3>
         <div className="confidence-display">
           <div className="confidence-percentage">
             {calendar.confidence_level.toFixed(2)}%
@@ -102,10 +116,17 @@ function CalendarCard({ calendar }: CalendarCardProps) {
 
       {/* Location Information */}
       <div className="location-section">
-        <h3 className="section-title">📍 Location</h3>
+        <h3 className="section-title">📍 {t("calendarCard.location")}</h3>
         <div className="location-info">
-          <p className="location-name">{calendar.village_name}</p>
-          {calendar.village_name_chichewa && (
+          <p className="location-name">
+            {language === "ny" && calendar.village_name_chichewa
+              ? calendar.village_name_chichewa
+              : calendar.village_name}
+          </p>
+          {language === "ny" && calendar.village_name && (
+            <p className="location-name-chichewa">{calendar.village_name}</p>
+          )}
+          {language === "en" && calendar.village_name_chichewa && (
             <p className="location-name-chichewa">
               {calendar.village_name_chichewa}
             </p>
@@ -116,7 +137,7 @@ function CalendarCard({ calendar }: CalendarCardProps) {
       {/* Calculation Date Footer */}
       <div className="calendar-footer">
         <p className="calculation-date">
-          Calculated on:{" "}
+          {t("calendarCard.calculatedOn")}:{" "}
           {new Date(calendar.calculated_at).toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",

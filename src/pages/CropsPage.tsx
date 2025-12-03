@@ -83,69 +83,70 @@
 
 // export default CropsPage;
 
-
-"use client"
-
 // Crops Page - Displays crop suitability recommendations
 // Completed by Person 3
 
-import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import LoadingSpinner from "../components/LoadingSpinner"
-import CropCard from "../components/CropCard"
-import { getCropSuitability } from "../services/api"
-import type { CropSuitability } from "../types"
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import LoadingSpinner from "../components/LoadingSpinner";
+import CropCard from "../components/CropCard";
+import { getCropSuitability } from "../services/api";
+import type { CropSuitability } from "../types";
+import { useLanguage } from "../contexts/LanguageContext";
 
 function CropsPage() {
-  const navigate = useNavigate()
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState("")
-  const [crops, setCrops] = useState<CropSuitability[]>([])
-  const [searchTerm, setSearchTerm] = useState("")
-  const [minScore, setMinScore] = useState(0)
+  const navigate = useNavigate();
+  const { t } = useLanguage();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [crops, setCrops] = useState<CropSuitability[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [minScore, setMinScore] = useState(0);
 
   useEffect(() => {
     // Check if location is selected
-    const villageId = localStorage.getItem("selectedVillage")
+    const villageId = localStorage.getItem("selectedVillage");
 
     if (!villageId) {
-      setError("Please select a location first")
-      setLoading(false)
-      return
+      setError("Please select a location first");
+      setLoading(false);
+      return;
     }
 
     // Fetch crop suitability data from API
     const fetchCrops = async () => {
       try {
-        setLoading(true)
-        const data = await getCropSuitability(villageId)
+        setLoading(true);
+        const data = await getCropSuitability(villageId);
         // Sort by suitability score (highest first)
-        const sorted = data.sort((a, b) => b.suitability_score - a.suitability_score)
-        setCrops(sorted)
-        setError("")
+        const sorted = data.sort(
+          (a, b) => b.suitability_score - a.suitability_score
+        );
+        setCrops(sorted);
+        setError("");
       } catch (err) {
-        console.error("Failed to fetch crop suitability:", err)
-        setError("Failed to load crop recommendations. Please try again.")
+        console.error("Failed to fetch crop suitability:", err);
+        setError("Failed to load crop recommendations. Please try again.");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchCrops()
-  }, [])
+    fetchCrops();
+  }, []);
 
   // Filter crops based on search term and minimum score
   const filteredCrops = crops.filter((crop) => {
     const matchesSearch =
       crop.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       crop.name_chichewa.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      crop.scientific_name.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesScore = crop.suitability_score >= minScore
-    return matchesSearch && matchesScore
-  })
+      crop.scientific_name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesScore = crop.suitability_score >= minScore;
+    return matchesSearch && matchesScore;
+  });
 
   if (loading) {
-    return <LoadingSpinner />
+    return <LoadingSpinner />;
   }
 
   if (error) {
@@ -154,24 +155,25 @@ function CropsPage() {
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded text-center">
           <span className="text-2xl">⚠️</span> {error}
           <button
+            type="button"
             onClick={() => navigate("/location")}
             className="mt-4 btn-primary block mx-auto bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
           >
-            Select Location
+            {t("common.selectLocation")}
           </button>
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Page header */}
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-green-800 mb-2">Crop Recommendations</h1>
-        <p className="text-gray-600">
-          Crops ranked by suitability for your location based on soil, elevation, and climate data
-        </p>
+        <h1 className="text-3xl font-bold text-green-800 mb-2">
+          {t("crops.title")}
+        </h1>
+        <p className="text-gray-600">{t("crops.desc")}</p>
       </div>
 
       {/* Search and filter controls */}
@@ -179,13 +181,16 @@ function CropsPage() {
         <div className="flex flex-col md:flex-row gap-4">
           {/* Search input */}
           <div className="flex-1">
-            <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">
-              Search Crops
+            <label
+              htmlFor="search"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              {t("crops.search")}
             </label>
             <input
               id="search"
               type="text"
-              placeholder="Search by name..."
+              placeholder={t("crops.searchPlaceholder")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
@@ -194,8 +199,11 @@ function CropsPage() {
 
           {/* Minimum score filter */}
           <div className="md:w-64">
-            <label htmlFor="minScore" className="block text-sm font-medium text-gray-700 mb-1">
-              Minimum Score: {minScore}%
+            <label
+              htmlFor="minScore"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              {t("crops.minScore")}: {minScore}%
             </label>
             <input
               id="minScore"
@@ -211,7 +219,8 @@ function CropsPage() {
 
         {/* Results count */}
         <p className="text-sm text-gray-500 mt-3">
-          Showing {filteredCrops.length} of {crops.length} crops
+          {t("crops.showing")} {filteredCrops.length} {t("crops.of")}{" "}
+          {crops.length} {t("crops.cropsText")}
         </p>
       </div>
 
@@ -224,20 +233,21 @@ function CropsPage() {
         </div>
       ) : (
         <div className="text-center py-12 bg-gray-50 rounded-lg">
-          <p className="text-gray-500 text-lg">No crops found matching your criteria.</p>
+          <p className="text-gray-500 text-lg">{t("crops.noResults")}</p>
           <button
+            type="button"
             onClick={() => {
-              setSearchTerm("")
-              setMinScore(0)
+              setSearchTerm("");
+              setMinScore(0);
             }}
             className="mt-4 text-green-600 hover:text-green-700 font-medium"
           >
-            Clear filters
+            {t("crops.clearFilters")}
           </button>
         </div>
       )}
     </div>
-  )
+  );
 }
 
-export default CropsPage
+export default CropsPage;
