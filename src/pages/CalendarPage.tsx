@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -65,11 +64,11 @@ function CalendarPage() {
     <div className="max-w-4xl mx-auto px-4 max-sm:px-2">
       <div className="calendar-page-header max-sm:mb-6">
         <h1 className="text-3xl font-bold text-[--color-primary] mb-4 max-sm:text-2xl max-sm:mb-3">
-          🌱 Planting Calendar
+          🌱 Maize Planting Calendar
         </h1>
         <p className="calendar-page-description text-gray-600 mb-8 max-sm:text-sm max-sm:mb-6">
-          Recommended planting dates based on 10-year rainfall analysis and
-          local climate patterns
+          Recommended maize planting dates based on 10-year rainfall analysis
+          and local climate patterns
         </p>
       </div>
 
@@ -83,6 +82,13 @@ function CalendarPage() {
           <li className="flex items-start gap-2">
             <span className="font-bold mt-0.5">•</span>
             <span>
+              <strong>Maize-Specific:</strong> This calendar is optimized for
+              maize planting in your village
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="font-bold mt-0.5">•</span>
+            <span>
               <strong>Planting Window:</strong> The optimal period to plant
               based on historical rainfall patterns
             </span>
@@ -92,13 +98,6 @@ function CalendarPage() {
             <span>
               <strong>Confidence Level:</strong> How reliable this
               recommendation is based on data quality and consistency
-            </span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="font-bold mt-0.5">•</span>
-            <span>
-              <strong>Location-Specific:</strong> This calendar is tailored to
-              your village's unique climate conditions
             </span>
           </li>
           <li className="flex items-start gap-2">
@@ -130,4 +129,3 @@ function CalendarPage() {
 }
 
 export default CalendarPage;
-
