@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import { getAllDistricts, getVillagesByDistrict } from "../services/api";
 import type { District, Village } from "../types";
 import LoadingSpinner from "./LoadingSpinner";
+import { useLanguage } from "../contexts/LanguageContext";
 
 interface LocationSelectorProps {
   onLocationSelected: () => void;
 }
 
 function LocationSelector({ onLocationSelected }: LocationSelectorProps) {
+  const { t, language } = useLanguage();
   const [districts, setDistricts] = useState<District[]>([]);
   const [villages, setVillages] = useState<Village[]>([]);
   const [selectedDistrict, setSelectedDistrict] = useState("");
@@ -24,14 +26,14 @@ function LocationSelector({ onLocationSelected }: LocationSelectorProps) {
         const data = await getAllDistricts();
         setDistricts(data);
       } catch (err) {
-        setError("Failed to load districts. Please check your connection.");
+        setError(t("location.failedDistricts"));
         console.error("Error fetching districts:", err);
       } finally {
         setLoading(false);
       }
     };
     fetchDistricts();
-  }, []);
+  }, [t]);
 
   // Fetch villages when district is selected
   useEffect(() => {
@@ -48,14 +50,14 @@ function LocationSelector({ onLocationSelected }: LocationSelectorProps) {
         const data = await getVillagesByDistrict(selectedDistrict);
         setVillages(data);
       } catch (err) {
-        setError("Failed to load villages. Please try again.");
+        setError(t("location.failedVillages"));
         console.error("Error fetching villages:", err);
       } finally {
         setLoading(false);
       }
     };
     fetchVillages();
-  }, [selectedDistrict]);
+  }, [selectedDistrict, t]);
 
   const handleDistrictChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedDistrict(e.target.value);
@@ -70,7 +72,7 @@ function LocationSelector({ onLocationSelected }: LocationSelectorProps) {
     e.preventDefault();
 
     if (!selectedDistrict || !selectedVillage) {
-      setError("Please select both district and village");
+      setError(t("location.selectBoth"));
       return;
     }
 
@@ -79,7 +81,7 @@ function LocationSelector({ onLocationSelected }: LocationSelectorProps) {
     const village = villages.find((v) => v.id === selectedVillage);
 
     if (!district || !village) {
-      setError("Invalid selection. Please try again.");
+      setError(t("location.invalidSelection"));
       return;
     }
 
@@ -106,7 +108,7 @@ function LocationSelector({ onLocationSelected }: LocationSelectorProps) {
         <div className="form-group">
           <label htmlFor="district" className="form-label">
             <span className="label-icon">📍</span>
-            Select District
+            {t("location.district")}
           </label>
           <select
             id="district"
@@ -116,10 +118,11 @@ function LocationSelector({ onLocationSelected }: LocationSelectorProps) {
             className="location-select"
             required
           >
-            <option value="">-- Choose a district --</option>
+            <option value="">-- {t("location.district")} --</option>
             {districts.map((district) => (
               <option key={district.id} value={district.id}>
-                {district.name} ({district.name_chichewa})
+                {language === "ny" ? district.name_chichewa : district.name} (
+                {language === "ny" ? district.name : district.name_chichewa})
               </option>
             ))}
           </select>
@@ -128,7 +131,7 @@ function LocationSelector({ onLocationSelected }: LocationSelectorProps) {
         <div className="form-group">
           <label htmlFor="village" className="form-label">
             <span className="label-icon">🏘️</span>
-            Select Village
+            {t("location.village")}
           </label>
           <select
             id="village"
@@ -140,12 +143,13 @@ function LocationSelector({ onLocationSelected }: LocationSelectorProps) {
           >
             <option value="">
               {selectedDistrict
-                ? "-- Choose a village --"
-                : "-- Select a district first --"}
+                ? `-- ${t("location.village")} --`
+                : `-- ${t("location.selectDistrict")} --`}
             </option>
             {villages.map((village) => (
               <option key={village.id} value={village.id}>
-                {village.name} ({village.name_chichewa})
+                {language === "ny" ? village.name_chichewa : village.name} (
+                {language === "ny" ? village.name : village.name_chichewa})
               </option>
             ))}
           </select>
@@ -154,7 +158,7 @@ function LocationSelector({ onLocationSelected }: LocationSelectorProps) {
         {loading && (
           <div className="loading-container">
             <LoadingSpinner />
-            <span className="loading-text">Loading...</span>
+            <span className="loading-text">{t("common.loading")}</span>
           </div>
         )}
 
@@ -163,7 +167,7 @@ function LocationSelector({ onLocationSelected }: LocationSelectorProps) {
           disabled={!selectedDistrict || !selectedVillage || loading}
           className="submit-button"
         >
-          {loading ? "Loading..." : "Continue to Calendar →"}
+          {loading ? t("common.loading") : `${t("location.continue")} →`}
         </button>
       </form>
     </div>
